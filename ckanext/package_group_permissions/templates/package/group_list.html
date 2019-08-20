@@ -6,18 +6,21 @@
 
   {% if h.check_access('package_update', {'id':c.pkg_dict.id }) %}
     {% set groups = h.get_all_groups() %}
-    {% if groups %}
-      <form class="add-to-group" method="post">
-        <div class="form-group">
-          <select id="field-add_group" class="form-control" name="group_added">
-            {% for option in groups %}
-              <option value="{{ option[0] }}"> {{ option[1] }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary" title="{{ _('Associate this group with this dataset') }}">{{ _('Add to group') }}</button>
-      </form>
-    {% endif %}
+  {% else %}
+    {% set groups = c.group_dropdown %}
+  {% endif %}
+
+  {% if groups %}
+    <form class="add-to-group" method="post">
+      <div class="form-group">
+        <select id="field-add_group" class="form-control" name="group_added">
+          {% for option in groups %}
+            <option value="{{ option[0] }}"> {{ option[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" title="{{ _('Associate this group with this dataset') }}">{{ _('Add to group') }}</button>
+    </form>
   {% endif %}
 
   {% if c.pkg_dict.groups %}

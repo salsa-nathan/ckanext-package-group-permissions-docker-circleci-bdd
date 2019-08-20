@@ -4,6 +4,7 @@ import ckan.authz as authz
 import ckan.logic.auth as logic_auth
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import helpers
 
 
 class PackageGroupPermissionsPlugin(plugins.SingletonPlugin):
@@ -43,7 +44,12 @@ class PackageGroupPermissionsPlugin(plugins.SingletonPlugin):
             permission = 'manage_group'
 
         if c.controller in ['package', 'dataset'] and c.action in ['groups']:
-            authorized = True  # helpers.user_has_admin_access(True)
+            authorized = helpers.user_has_admin_access(include_editor_access=True)
+            # Fallback to the default CKAN behaviour
+            if not authorized:
+                authorized = authz.has_user_permission_for_group_or_org(group.id,
+                                                                        user,
+                                                                        permission)
         else:
             authorized = authz.has_user_permission_for_group_or_org(group.id,
                                                                     user,
@@ -58,15 +64,5 @@ class PackageGroupPermissionsPlugin(plugins.SingletonPlugin):
     # ITemplateHelpers
     def get_helpers(self):
         return {
-            'get_all_groups': self.get_all_groups,
+            'get_all_groups': helpers.get_all_groups,
         }
-
-    def get_all_groups(self):
-        groups = toolkit.get_action('group_list')(
-            data_dict={'include_dataset_count': False, 'all_fields': True})
-        pkg_group_ids = set(group['id'] for group
-                            in c.pkg_dict.get('groups', []))
-        return [[group['id'], group['display_name']]
-                for group in groups if
-                group['id'] not in pkg_group_ids]
-
