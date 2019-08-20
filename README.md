@@ -1,7 +1,5 @@
-# ckanext-odi-certificates
-A custom CKAN extension for Data.Qld
-
-[![CircleCI](https://circleci.com/gh/qld-gov-au/ckanext-odi-certificates/tree/develop.svg?style=shield)](https://circleci.com/gh/qld-gov-au/ckanext-odi-certificates/tree/develop)
+# ckanext-package-group-permissions
+A CKAN extension for allowing dataset organisation admins and editors to add a dataset to any group.
 
 ## Local environment setup
 - Make sure that you have latest versions of all required software installed:
